@@ -5,6 +5,7 @@
 @section('content')
     <article>
         <h1>{{ $auteur->nom }} {{ $auteur->prenom }}</h1>
+        <p>{{ $auteur->email }}</p>
         <p>
             {!! $auteur->descriptif !!}
         </p>
