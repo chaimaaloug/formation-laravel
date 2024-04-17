@@ -3,11 +3,30 @@
 @section('title', $post->title)
 
 @section('content')
-    <article>
-        <h1>{{ $post->title }}</h1>
-        <p>{{ $post->created_at->format('d/m/Y') }}</p>
-        <p>
-            {!! $post->content !!}
-        </p>
-    </article>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">{{ $post->title }}</h5>
+                @if ($post->category)
+                    <span class="badge bg-dark">{{ $post->category->name }}</span>
+                @else
+                    <span class="badge bg-secondary">Aucune catégorie</span>
+                @endif
+            </div>
+            <div class="card-body">
+                <p class="card-text">{!! $post->content !!}</p>
+                @if ($post->tags->isNotEmpty())
+                    <div class="mt-3">
+                        <strong>Tags :</strong>
+                        @foreach ($post->tags as $tag)
+                            <span class="badge bg-info">{{ $tag->name }}</span>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+            <div class="card-footer text-muted">
+                Publié le {{ $post->created_at->format('d/m/Y') }}
+            </div>
+        </div>
+    </div>
 @endsection

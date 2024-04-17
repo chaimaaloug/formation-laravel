@@ -14,6 +14,8 @@
                 <th>Titre</th>
                 <th>Contenu</th>
                 <th>Date de création</th>
+                <th>Catégorie</th>
+                <th>Tag</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -23,6 +25,22 @@
                     <td>{{ $post->title }}</td>
                     <td>{{ $post->content }}</td>
                     <td>{{ $post->created_at->format('d/m/Y') }}</td>
+                    <td>
+                        @if ($post->category)
+                            {{ $post->category->name }}
+                        @else
+                            Aucune catégorie
+                        @endif
+                    </td>
+                    <td>
+                        @if ($post->tags)
+                            @foreach ($post->tags as $tag)
+                                <span>{{ $tag->name }}</span>
+                            @endforeach
+                        @endif
+                        ​
+
+                    </td>
                     <td>
                         <a href="{{ route('blog.show', ['post' => $post->slug]) }}" class="btn btn-primary">Voir plus</a>
                         <a href="{{ route('blog.edit', ['post' => $post->slug]) }}" class="btn btn-warning">Modifier</a>

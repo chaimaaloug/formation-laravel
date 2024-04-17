@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePostRequest;
 use App\Models\Post;
+use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -13,7 +15,7 @@ class BlogController extends Controller
     public function index(): View
     {
         return view('blog.index', [
-            'posts' => Post::orderBy('id', 'desc')->paginate(10)
+            'posts' => Post::orderBy('id', 'desc')->paginate(10),
         ]);
     }
 
@@ -28,36 +30,40 @@ class BlogController extends Controller
     {
         $post = new Post();
         return view('blog.create', [
-            'post' => $post
+            'post' => $post,
+            'categories' => Category::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get(),
         ]);
     }
 
     public function store(CreatePostRequest $request)
     {
-        $post = Post::create($request->validated());
-
-        //return redirect()->route('blog.show', ['post' => $post->slug])->with('success', "L'article a bien été sauvegardé");
+        $validatedData = $request->validated();
+        $post = Post::create($validatedData);
+        $post->tags()->sync($validatedData['tags']);
         return redirect()->route('blog.index')->with('success', "L'article a bien été sauvegardé");
     }
 
     public function edit(Post $post)
     {
         return view('blog.edit', [
-            'post' => $post
+            'post' => $post,
+            'categories' => Category::select('id', 'name')->get(),
+            'tags' => Tag::select('id', 'name')->get()
         ]);
     }
 
     public function update(Post $post, CreatePostRequest $request)
     {
-        $post->update($request->validated());
-
+        $validatedData = $request->validated();
+        $post->update($validatedData);
+        $post->tags()->sync($validatedData['tags']);
         return redirect()->route('blog.show', ['post' => $post->slug])->with('success', "L'article a bien été modifié");
     }
 
     public function delete(Post $post): RedirectResponse
     {
         $post->delete();
-
         return redirect()->route('blog.index')->with('success', "L'article a bien été supprimé");
     }
 }
