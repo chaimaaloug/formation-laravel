@@ -12,17 +12,16 @@
                 @else
                     <span class="badge bg-secondary">Aucune catégorie</span>
                 @endif
-            </div>
-            <div class="card-body">
-                <p class="card-text">{!! $post->content !!}</p>
                 @if ($post->tags->isNotEmpty())
                     <div class="mt-3">
-                        <strong>Tags :</strong>
                         @foreach ($post->tags as $tag)
-                            <span class="badge bg-info">{{ $tag->name }}</span>
+                            <strong><span class="badge bg-info">{{ $tag->name }}</span></strong>
                         @endforeach
                     </div>
                 @endif
+            </div>
+            <div class="card-body">
+                <p class="card-text">{!! $post->content !!}</p>
             </div>
             <div class="card-footer text-muted">
                 Publié le {{ $post->created_at->format('d/m/Y') }}
